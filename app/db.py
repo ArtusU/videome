@@ -17,7 +17,7 @@ def get_session():
     cloud_config= {
             'secure_connect_bundle': ASTRADB_CONNECT_BUNDLE
     }
-    auth_provider = PlainTextAuthProvider('<<CLIENT ID>>', '<<CLIENT SECRET>>')
+    auth_provider = PlainTextAuthProvider(ASTRADB_CLIENT_ID, ASTRADB_CLIENT_SECRET)
     cluster = Cluster(cloud=cloud_config, auth_provider=auth_provider)
     session = cluster.connect()
     connection.register_connection(str(session), session=session)
