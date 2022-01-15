@@ -1,5 +1,3 @@
-import email
-from wsgiref import validate
 from email_validator import EmailNotValidError, validate_email
 
 def _validate_email(email):
@@ -11,4 +9,4 @@ def _validate_email(email):
         valid = True
     except EmailNotValidError as e:
         msg = str(e)
-    return valid, msg, 
+    return valid, msg, email
