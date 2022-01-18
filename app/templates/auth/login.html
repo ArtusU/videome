@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class='row'>
+    <div class='col-md-4 text-center mx-auto'>
+        <h1>Login</h1>
+
+        <form method="POST">
+            <div>
+                <label for="email">Email</label>
+                <input type="email" name="email" placeholder="your@email.com">
+            </div>
+
+            <div>
+                <label for="password">Password</label>
+                <input type="password" name="password" placeholder="jfilsfadlbvcld949">
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+
