@@ -1,6 +1,6 @@
 import pathlib
 from pipes import Template
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from cassandra.cqlengine.management import sync_table
@@ -18,7 +18,7 @@ DB_SESSION = None
 
 @app.on_event("startup")
 def on_startup():
-    print("hello world")
+    print("rockin & rolling with DB session........")
     global DB_SESSION
     DB_SESSION = db.get_session()
     sync_table(User)
@@ -32,6 +32,36 @@ def homepage(request: Request):
     }
     return templates.TemplateResponse("home.html", context)
 
+
+@app.get("/login", response_class=HTMLResponse)
+def login_get_view(request: Request):
+    return templates.TemplateResponse("auth/login.html", {
+        "request": request
+    })
+    
+@app.post("/login", response_class=HTMLResponse)
+def login_post_view(request: Request,
+                    email: str=Form(...),
+                    password: str = Form(...)):
+    return templates.TemplateResponse("auth/login.html", {
+        "request": request
+    })
+
+
+@app.get("/signup", response_class=HTMLResponse)
+def signup_get_view(request: Request):
+    return templates.TemplateResponse("auth/signup.html", {
+        "request": request
+    })
+    
+@app.post("/signup", response_class=HTMLResponse)
+def signup_post_view(request: Request,
+                    email: str=Form(...),
+                    password: str = Form(...),
+                    password_confirm: str = Form(...)):
+    return templates.TemplateResponse("auth/signup.html", {
+        "request": request
+    })
 
 
 @app.get("/users")
