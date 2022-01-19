@@ -1,4 +1,6 @@
+import json
 import pathlib
+from pydantic.error_wrappers import ValidationError
 from pipes import Template
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
@@ -6,6 +8,9 @@ from fastapi.templating import Jinja2Templates
 from cassandra.cqlengine.management import sync_table
 from . import config, db
 from .users.models import User
+from .users.schemas import UserSignupSchema, UserLoginSchema
+from .utils import valid_schema_data_or_error
+
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 TEMPLATE_DIR = BASE_DIR / "templates"
@@ -43,8 +48,15 @@ def login_get_view(request: Request):
 def login_post_view(request: Request,
                     email: str=Form(...),
                     password: str = Form(...)):
+    raw_data  = {
+        "email": email,
+        "password": password
+    }
+    data, errors = valid_schema_data_or_error(raw_data, UserLoginSchema)
     return templates.TemplateResponse("auth/login.html", {
-        "request": request
+        "request": request,
+        "data": data,
+        "errors": errors
     })
 
 
@@ -54,14 +66,25 @@ def signup_get_view(request: Request):
         "request": request
     })
     
+    
 @app.post("/signup", response_class=HTMLResponse)
-def signup_post_view(request: Request,
-                    email: str=Form(...),
-                    password: str = Form(...),
-                    password_confirm: str = Form(...)):
+def signup_post_view(request: Request, 
+    email: str=Form(...), 
+    password: str = Form(...),
+    password_confirm: str = Form(...)
+    ):
+    raw_data  = {
+        "email": email,
+        "password": password,
+        "password_confirm": password_confirm
+    }
+    data, errors = valid_schema_data_or_error(raw_data, UserSignupSchema)
     return templates.TemplateResponse("auth/signup.html", {
-        "request": request
+        "request": request,
+        "data": data,
+        "errors": errors,
     })
+    
 
 
 @app.get("/users")
