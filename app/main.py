@@ -9,6 +9,7 @@ from cassandra.cqlengine.management import sync_table
 from . import config, db
 from .users.models import User
 from .users.schemas import UserSignupSchema
+from .utils import valid_schema_data_or_error
 
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
@@ -65,18 +66,12 @@ def signup_post_view(request: Request,
     password: str = Form(...),
     password_confirm: str = Form(...)
     ):
-    data = {}
-    errors = []
-    error_str = ""
-    try:
-        cleaned_data = UserSignupSchema(email=email, password=password, password_confirm=password_confirm)
-        data = cleaned_data.dict()
-    except ValidationError as e:
-        error_str = e.json()
-    try:
-        errors = json.loads(error_str)
-    except Exception as e:
-        errors = [{"loc": "non_field_error", "msg": "Unknown error"}]
+    raw_data  = {
+        "email": email,
+        "password": password,
+        "password_confirm": password_confirm
+    }
+    data, errors = valid_schema_data_or_error(raw_data, UserSignupSchema)
     return templates.TemplateResponse("auth/signup.html", {
         "request": request,
         "data": data,
