@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from cassandra.cqlengine.management import sync_table
 from . import config, db
 from .users.models import User
-from .users.schemas import UserSignupSchema
+from .users.schemas import UserSignupSchema, UserLoginSchema
 from .utils import valid_schema_data_or_error
 
 
@@ -52,9 +52,11 @@ def login_post_view(request: Request,
         "email": email,
         "password": password
     }
-    data, errors = valid_schema_data_or_error(raw_data, UserSignupSchema)
+    data, errors = valid_schema_data_or_error(raw_data, UserLoginSchema)
     return templates.TemplateResponse("auth/login.html", {
-        "request": request
+        "request": request,
+        "data": data,
+        "errors": errors
     })
 
 
