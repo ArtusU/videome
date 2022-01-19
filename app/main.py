@@ -48,6 +48,11 @@ def login_get_view(request: Request):
 def login_post_view(request: Request,
                     email: str=Form(...),
                     password: str = Form(...)):
+    raw_data  = {
+        "email": email,
+        "password": password
+    }
+    data, errors = valid_schema_data_or_error(raw_data, UserSignupSchema)
     return templates.TemplateResponse("auth/login.html", {
         "request": request
     })
