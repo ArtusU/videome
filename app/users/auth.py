@@ -1,9 +1,8 @@
 import datetime
 from app import config
 from jose import jwt, ExpiredSignatureError
-from tkinter.messagebox import NO
-from models import User
 
+from .models import User
 
 settings = config.get_settings()
 
