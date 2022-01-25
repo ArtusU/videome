@@ -24,6 +24,9 @@ templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
 
 DB_SESSION = None
 
+from .handlers import * #noqa
+
+
 @app.on_event("startup")
 def on_startup():
     print("DB rocking and rolling......")
