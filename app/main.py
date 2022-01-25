@@ -6,6 +6,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from cassandra.cqlengine.management import sync_table
 from pydantic.error_wrappers import ValidationError
+
+from app.users.decorators import login_required
 from . import config, db, utils
 from .shortcuts import render, redirect
 from .users.models import User
@@ -36,6 +38,13 @@ def homepage(request: Request):
         "abc": "abc"
     }
     return render(request, "home.html", context)
+
+
+@app.get("/account", response_class=HTMLResponse)
+@login_required
+def account_view(request: Request):
+    context = {}
+    return render(request, "account.html", context)
 
 
 @app.get("/login", response_class=HTMLResponse)
