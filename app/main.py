@@ -18,6 +18,8 @@ from .users.schemas import (
     UserLoginSchema,
     UserSignupSchema
 )
+from .videos.models import Video
+
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 TEMPLATE_DIR = BASE_DIR / "templates"
@@ -37,6 +39,7 @@ def on_startup():
     global DB_SESSION
     DB_SESSION = db.get_session()
     sync_table(User)
+    sync_table(Video)
 
 
 @app.get("/", response_class=HTMLResponse)
