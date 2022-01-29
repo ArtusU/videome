@@ -4,7 +4,7 @@ from app.config import get_settings
 from cassandra.cqlengine import columns
 from cassandra.cqlengine.models import Model
 
-from . import validators, security
+from . import validators, security, exceptions
 
 
 settings = get_settings()
