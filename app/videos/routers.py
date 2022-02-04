@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse
 from app import utils
 from app.users.decorators import login_required
 from app.shortcuts import render, redirect
+from app.videos.models import Video
 
 from .schemas import VideoCreateSchema
 
@@ -41,7 +42,10 @@ def video_create_post_view(request: Request, title: str=Form(...), url: str = Fo
 
 @router.get("/", response_class=HTMLResponse)
 def video_list_view(request: Request):
-    context = {}
+    q = Video.objects.all().limit(100)
+    context = {
+        "object_list": q
+        }
     return render(request, "videos/list.html", context)
 
 
