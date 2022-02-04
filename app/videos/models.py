@@ -18,6 +18,7 @@ class Video(Model):
     host_id = columns.Text(primary_key=True) # YouTube, Vimeo
     db_id = columns.UUID(primary_key=True, default=uuid.uuid1) # UUID1
     host_service = columns.Text(default='youtube')
+    title = columns.Text()
     url = columns.Text() # secure
     user_id = columns.UUID()
     # user_display_name
@@ -26,7 +27,7 @@ class Video(Model):
         return self.__repr__()
 
     def __repr__(self):
-        return f"Video(host_id={self.host_id}, host_service={self.host_service})"
+        return f"Video(title={self.title}, host_id={self.host_id}, host_service={self.host_service})"
     
     def as_data(self):
         return {f"{self.host_service}_id": self.host_id, "path": self.path}

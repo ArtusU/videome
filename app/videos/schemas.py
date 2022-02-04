@@ -31,6 +31,7 @@ class VideoCreateSchema(BaseModel):
             raise ValueError(f"{url} is not a valid YouTube URL")
         return url
     
+    @root_validator
     def validate_data(cls, values):
         url = values.get("url")
         title = values.get("title")
@@ -55,4 +56,7 @@ class VideoCreateSchema(BaseModel):
             raise ValueError("There's a problem with your account, please try again.")
         if not isinstance(video_obj, Video):
             raise ValueError("There's a problem with your account, please try again.")
+        # if title is not None:
+        #     video_obj.title = title
+        #     video_obj.save()
         return video_obj.as_data()
