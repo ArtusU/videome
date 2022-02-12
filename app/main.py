@@ -20,6 +20,7 @@ from .users.schemas import (
 )
 from .videos.models import Video
 from .videos.routers import router as video_router
+from .watch_events.models import WatchEvent
 
 
 DB_SESSION = None
@@ -40,6 +41,7 @@ def on_startup():
     DB_SESSION = db.get_session()
     sync_table(User)
     sync_table(Video)
+    sync_table(WatchEvent)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -114,5 +116,13 @@ def users_list_view():
 @app.post("/watch-event")
 def watch_event_view(request:Request, data:dict):
     print("data", data)
-    print(request.user.is_authenticated)
+    if (request.user.is_authenticated):
+        WatchEvent.objects.create(
+            host_id=data.get("videoId"),
+            user_id=request.user.username,
+            start_time=0,
+            end_time=data.get('currentTime'),
+            duration=500,
+            complete=False
+        )
     return {"working":True}
