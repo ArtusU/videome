@@ -1,17 +1,8 @@
-{% extends "base.html" %} 
-
-
-{% block content %} 
-
-{{ host_id }} 
-
-{{ object }}
+{% extends "base.html" %} {% block content %} {{ host_id }} {{ object }}
 
 <div id="yt-video" data-video-id="{{ host_id }}" data-start-time="0"></div>
 
-  
 <div><code>{{ object.render() }}</code></div>
-
 
 <script>
   var youtubeVideoDiv = document.getElementById("yt-video");
@@ -94,7 +85,24 @@
     };
     timeSinceLastSaved = 0;
     console.log("saving...", data);
+
+    var reqOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+    fetch("/watch-event", reqOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("success:", data);
+      })
+      .catch((err) => {
+        console.log("error: ", err);
+      });
   }
+
 </script>
 
 {% endblock %}
